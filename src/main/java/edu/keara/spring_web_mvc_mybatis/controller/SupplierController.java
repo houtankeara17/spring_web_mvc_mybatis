@@ -24,19 +24,25 @@ public class SupplierController {
     @GetMapping("/{id}")
     public ResponseEntity<Supplier> getSupplierById(@PathVariable Integer id){
         Supplier result = supplierService.findSupplierById(id);
-        return new ResponseEntity<>(result,HttpStatus.OK);
+        return ResponseEntity.status(200).body(result);
     }
 
     @PostMapping()
     public ResponseEntity<Supplier> createSupplier(@RequestBody Supplier supplier){
         supplierService.createSupplier(supplier);
-        return new ResponseEntity<>(supplier,HttpStatus.CREATED);
+        return ResponseEntity.noContent().build();
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Supplier> updateSupplier(@PathVariable Integer id, @RequestBody Supplier supplier){
-        supplierService.updateSupplier(id,supplier);
-        return new ResponseEntity<>(supplier,HttpStatus.OK);
+    public ResponseEntity<Void> updateSupplier(@PathVariable Integer id, @RequestBody Supplier supplier) {
+        supplierService.updateSupplier(id, supplier);
+        return ResponseEntity.noContent().build(); // HTTP 204  No Content
+    }
+
+    @PatchMapping("/{id}/status")
+    public ResponseEntity<Void> updateSupplierStatus(@PathVariable Integer id, @RequestParam("active") Boolean active) {
+        supplierService.updateStatus(id, active);
+        return ResponseEntity.noContent().build(); // HTTP 204 No Content
     }
 
     @DeleteMapping("/{id}")

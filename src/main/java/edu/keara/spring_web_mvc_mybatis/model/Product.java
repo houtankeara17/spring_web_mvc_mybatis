@@ -16,6 +16,6 @@ public class Product {
     private String description;
     private BigDecimal price;
     private Boolean inStock;
-    private Integer supplier;
+    private Supplier supplier;
     private List<Category> categories;
 }

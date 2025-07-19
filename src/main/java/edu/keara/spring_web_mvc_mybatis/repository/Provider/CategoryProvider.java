@@ -8,7 +8,7 @@ public class CategoryProvider implements ProviderMethodResolver {
     public String selectProductCategories(){
         return new SQL(){{
             SELECT("*");
-            FROM(TB_NAME + "c");
+            FROM(TB_NAME + " c");
             INNER_JOIN("product_categories pc ON pc.category_id = c.id");
             WHERE("pc.product_id = #{productId}");
         }}.toString();

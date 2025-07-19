@@ -16,6 +16,7 @@ public class SupplierServiceImpl implements SupplierService {
 
     @Override
     public void createSupplier(Supplier supplier) {
+
         supplierRepository.insert(supplier);
     }
 

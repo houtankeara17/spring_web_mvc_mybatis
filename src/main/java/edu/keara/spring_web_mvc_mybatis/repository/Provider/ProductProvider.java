@@ -14,7 +14,7 @@ public class ProductProvider implements ProviderMethodResolver {
             VALUES("description","#{pro.description}");
             VALUES("price","#{pro.price}");
             VALUES("in_stock","#{pro.inStock}");
-            VALUES("supplier_id","#{pro.supplierId}");
+            VALUES("supplier_id","#{pro.supplier.id}");
         }}.toString();
     }
 
@@ -38,9 +38,18 @@ public class ProductProvider implements ProviderMethodResolver {
             VALUES("category_id","#{catId}");
         }}.toString();
     }
-//
-//    public String deleteProductCategories(){
-//        DELETE_FROM("product_categories");
-//        WHERE("")
-//    }
+
+    public String deleteProductCategories(){
+        return new SQL(){{
+            DELETE_FROM("product_categories");
+            WHERE("product_id = #{proId}");
+        }}.toString();
+    }
+
+    public String findAllProducts(){
+        return new SQL(){{
+            SELECT("*");
+            FROM(TB_NAME);
+        }}.toString();
+    }
 }
