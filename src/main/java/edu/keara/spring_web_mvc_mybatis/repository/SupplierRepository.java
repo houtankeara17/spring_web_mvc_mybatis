@@ -13,7 +13,7 @@ public interface SupplierRepository {
     """)
     void insert(@Param("s") Supplier supplier);
 
-    @Select("SELECT * FROM suppliers WHERE id = #{id}")
+    @Select("SELECT * FROM suppliers WHERE id = #{id} ")
     Supplier findById(@Param("id") Integer id);
 
     @Update("""
@@ -28,7 +28,6 @@ public interface SupplierRepository {
     @Delete("DELETE FROM suppliers WHERE id=#{id}")
     void deleteById(@Param("id") Integer id);
 
-    @Select("SELECT * FROM suppliers")
+    @Select("SELECT * FROM suppliers ORDER BY id DESC")
     List<Supplier> findAll();
-
 }

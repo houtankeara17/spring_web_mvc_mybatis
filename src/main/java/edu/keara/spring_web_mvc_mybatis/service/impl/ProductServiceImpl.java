@@ -100,7 +100,7 @@ public class ProductServiceImpl implements ProductService {
     public void update(Integer id, UpdateProductDto updateProduct) {
         boolean exists = productRepository.existsById(id);
 
-        if(!exists){
+        if (!exists){
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Product not found with id: " + id);
         }
 
