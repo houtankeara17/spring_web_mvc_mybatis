@@ -8,9 +8,10 @@ import java.util.List;
 
 public interface ProductService {
     void create(CreateProductDto createProductDto);
-    void update(UpdateProductDto updateProductDto);
+    void update(Integer id, UpdateProductDto updateProduct);
     void delete(Integer id);
     Product findById(Integer id);
     List<Product> findAll();
     List<Product> searchByNameAndStatus(String name, Boolean status);
+    Product findBySlug(String slug);
 }

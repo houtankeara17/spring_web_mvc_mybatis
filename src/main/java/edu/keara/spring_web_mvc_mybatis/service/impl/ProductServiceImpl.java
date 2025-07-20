@@ -42,23 +42,42 @@ public class ProductServiceImpl implements ProductService {
                 productRepository.insertProductCategories(newProduct.getId(), categoryId);
             }
         }
-
     }
 
-
     @Override
-    public void update(UpdateProductDto updateProductDto) {
+    public void update(Integer id, UpdateProductDto updateProduct) {
+        boolean exists = productRepository.existsById(id);
+
+        if (exists) {
+            Product newProduct = new Product();
+            newProduct.setId(id);
+            newProduct.setName(updateProduct.name());
+            newProduct.setSlug(SlugUtil.toSlug(updateProduct.name()));
+            newProduct.setDescription(updateProduct.description());
+            newProduct.setPrice(updateProduct.price());
+            newProduct.setInStock(updateProduct.inStock());
+
+            Supplier supplier = supplierRepository.findById(updateProduct.supplierId());
+            if (supplier != null) {
+                newProduct.setSupplier(supplier);
+            }
+
+            productRepository.update(newProduct);
+        }
 
     }
 
     @Override
     public void delete(Integer id) {
-
+        boolean exists = productRepository.existsById(id);
+        if (exists) {
+            productRepository.deleteById(id);
+        }
     }
 
     @Override
     public Product findById(Integer id) {
-        return null;
+        return productRepository.findById(id);
     }
 
     @Override
@@ -69,6 +88,12 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public List<Product> searchByNameAndStatus(String name, Boolean status) {
-        return List.of();
+        return productRepository.searchByNameAndStatus(name, status);
     }
+
+    @Override
+    public Product findBySlug(String slug) {
+        return productRepository.findBySlug(slug);
+    }
+
 }

@@ -26,7 +26,7 @@ public class ProductProvider implements ProviderMethodResolver {
             SET("description=#{pro.description}");
             SET("price=#{pro.price}");
             SET("in_stock=#{pro.inStock}");
-            SET("supplier_id=#{pro.supplierId}");
+            SET("supplier_id=#{pro.supplier.id}");
             WHERE("id=#{pro.id}");
         }}.toString();
     }
