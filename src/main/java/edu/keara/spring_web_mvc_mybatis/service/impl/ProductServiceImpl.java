@@ -9,7 +9,10 @@ import edu.keara.spring_web_mvc_mybatis.repository.SupplierRepository;
 import edu.keara.spring_web_mvc_mybatis.service.ProductService;
 import edu.keara.spring_web_mvc_mybatis.util.SlugUtil;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 
@@ -19,7 +22,52 @@ public class ProductServiceImpl implements ProductService {
     private final ProductRepository productRepository;
     private final SupplierRepository supplierRepository;
 
+    // -----------------------
+    // Find All or Get all products
+    // -----------------------
     @Override
+    public List<Product> findAll() {
+        List<Product> products = productRepository.findAll();
+        return products;
+    }
+
+    // -----------------------
+    // Find by id
+    // -----------------------
+    @Override
+    public Product findById(Integer id) {
+        Product product = productRepository.findById(id);
+        if(product == null){
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Product not found with id: " + id);
+        }
+        return product;
+    }
+
+    // -----------------------
+    // Find by slug
+    // -----------------------
+    @Override
+    public Product findBySlug(String slug) {
+        Product product = productRepository.findBySlug(slug);
+        if(product == null){
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Product not found with slug: " + slug);
+        }
+        return product;
+    }
+
+    // -----------------------
+    // Search by name and status
+    // -----------------------
+    @Override
+    public List<Product> searchByNameAndStatus(String name, Boolean status) {
+        return productRepository.searchByNameAndStatus(name, status);
+    }
+
+    // -----------------------
+    // Create new product
+    // -----------------------
+    @Override
+    @Transactional
     public void create(CreateProductDto product) {
 
         Product newProduct = new Product();
@@ -44,9 +92,17 @@ public class ProductServiceImpl implements ProductService {
         }
     }
 
+    // -----------------------
+    // Update product by id
+    // -----------------------
     @Override
+    @Transactional
     public void update(Integer id, UpdateProductDto updateProduct) {
         boolean exists = productRepository.existsById(id);
+
+        if(!exists){
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Product not found with id: " + id);
+        }
 
         if (exists) {
             Product newProduct = new Product();
@@ -58,42 +114,25 @@ public class ProductServiceImpl implements ProductService {
             newProduct.setInStock(updateProduct.inStock());
 
             Supplier supplier = supplierRepository.findById(updateProduct.supplierId());
-            if (supplier != null) {
-                newProduct.setSupplier(supplier);
+            if (supplier == null) {
+                throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Supplier not found with id: " + updateProduct.supplierId());
             }
 
+            newProduct.setSupplier(supplier);
             productRepository.update(newProduct);
         }
-
     }
 
+    // -----------------------
+    // Delete product by id
+    // -----------------------
     @Override
+    @Transactional
     public void delete(Integer id) {
         boolean exists = productRepository.existsById(id);
-        if (exists) {
-            productRepository.deleteById(id);
+        if (!exists) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Product not found with id: " + id);
         }
+        productRepository.deleteById(id);
     }
-
-    @Override
-    public Product findById(Integer id) {
-        return productRepository.findById(id);
-    }
-
-    @Override
-    public List<Product> findAll() {
-        List<Product> products = productRepository.findAll();
-        return products;
-    }
-
-    @Override
-    public List<Product> searchByNameAndStatus(String name, Boolean status) {
-        return productRepository.searchByNameAndStatus(name, status);
-    }
-
-    @Override
-    public Product findBySlug(String slug) {
-        return productRepository.findBySlug(slug);
-    }
-
 }
