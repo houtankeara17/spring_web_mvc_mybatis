@@ -39,6 +39,14 @@ public class ProductProvider implements ProviderMethodResolver {
         }}.toString();
     }
 
+    public String updateProductCategories(){
+        return new SQL(){{
+            UPDATE("product_categories");
+            SET("category_id=#{catId}");
+            WHERE("product_id=#{proId}");
+        }}.toString();
+    }
+
     public String deleteProductCategories(){
         return new SQL(){{
             DELETE_FROM("product_categories");

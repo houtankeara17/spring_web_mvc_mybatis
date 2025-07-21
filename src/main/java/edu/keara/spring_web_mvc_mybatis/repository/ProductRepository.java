@@ -61,20 +61,15 @@ ProductRepository {
     })
     List<Product> findAll();
 
-//    @SelectProvider(ProductProvider.class)
-//    @Results({
-//            @Result(property = "id", column = "id"),
-//            @Result(property = "slug", column = "slug"),
-//            @Result(property = "name", column = "name"),
-//            @Result(property = "description", column = "description"),
-//            @Result(property = "price", column = "price"),
-//            @Result(property = "inStock", column ="in_stock"),
-//            @Result(property = "supplier", column = "supplier_id",
-//                    one = @One(select = "edu.keara.spring_web_mvc_mybatis.repository.SupplierRepository.findById")),
-//            @Result(property = "categories", column = "id",
-//                    many = @Many(select = "edu.keara.spring_web_mvc_mybatis.repository.CategoryRepository.selectProductCategories"))
-//    })
-//    List<Product> findAllProducts();
+    // -----------------------
+    // Global search by name and status
+    // -----------------------
+    @Select("""
+    SELECT * FROM products
+    WHERE LOWER(name) LIKE CONCAT('%', LOWER(#{name}), '%')
+    AND in_stock = #{status}
+    """)
+    List<Product> searchByNameAndStatus(@Param("name") String name, @Param("status") Boolean status);
 
     // -----------------------
     // Insert a new product
@@ -96,14 +91,10 @@ ProductRepository {
     void update(@Param("pro") Product product);
 
     // -----------------------
-    // Global search by name and status
+    // Product-Category Many-too-Many handlers
     // -----------------------
-    @Select("""
-    SELECT * FROM products
-    WHERE LOWER(name) LIKE CONCAT('%', LOWER(#{name}), '%')
-    AND in_stock = #{status}
-    """)
-    List<Product> searchByNameAndStatus(@Param("name") String name, @Param("status") Boolean status);
+    @UpdateProvider(ProductProvider.class)
+    void updateProductCategories(@Param("proId") Integer proId, @Param("catId") Integer catId);
 
     // -----------------------
     // Check existing product
@@ -116,5 +107,4 @@ ProductRepository {
     // -----------------------
     @Delete("DELETE FROM products WHERE id = #{id}")
     void deleteById(Integer id);
-
 }
