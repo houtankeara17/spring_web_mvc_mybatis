@@ -2,10 +2,8 @@ package edu.keara.spring_web_mvc_mybatis.service.impl;
 
 import edu.keara.spring_web_mvc_mybatis.dto.CreateProductDto;
 import edu.keara.spring_web_mvc_mybatis.dto.UpdateProductDto;
-import edu.keara.spring_web_mvc_mybatis.model.Category;
 import edu.keara.spring_web_mvc_mybatis.model.Product;
 import edu.keara.spring_web_mvc_mybatis.model.Supplier;
-import edu.keara.spring_web_mvc_mybatis.repository.CategoryRepository;
 import edu.keara.spring_web_mvc_mybatis.repository.ProductRepository;
 import edu.keara.spring_web_mvc_mybatis.repository.SupplierRepository;
 import edu.keara.spring_web_mvc_mybatis.service.ProductService;
@@ -23,7 +21,6 @@ import java.util.List;
 public class ProductServiceImpl implements ProductService {
     private final ProductRepository productRepository;
     private final SupplierRepository supplierRepository;
-    private final CategoryRepository categoryRepository;
 
     // -----------------------
     // Find All or Get all products
@@ -88,7 +85,7 @@ public class ProductServiceImpl implements ProductService {
 
         productRepository.insertProduct(newProduct);
 
-        if (product.categoryIds().size() > 0) {
+        if (!product.categoryIds().isEmpty()) {
             for (Integer categoryId : product.categoryIds()) {
                 productRepository.insertProductCategories(newProduct.getId(), categoryId);
             }
@@ -121,20 +118,8 @@ public class ProductServiceImpl implements ProductService {
                 throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Supplier not found with id: " + updateProduct.supplierId());
             }
 
-            Category category = categoryRepository.findById(updateProduct.categoryIds(id));
-            if (category == null) {
-                throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Category not found with id: " + updateProduct.categoryIds());
-            }
-
             newProduct.setSupplier(supplier);
-            newProduct.setCategories(List.of(category));
             productRepository.update(newProduct);
-
-            if (updateProduct.categoryIds().size()> 0) {
-                for (Integer categoryId : updateProduct.categoryIds()) {
-                    productRepository.updateProductCategories(newProduct.getId(), categoryId);
-                }
-            }
         }
     }
 

@@ -9,6 +9,10 @@ import java.util.List;
 public interface SupplierRepository {
 
     // -----------------------
+    // ✍️ Using with the Inline SQL type
+    // -----------------------
+
+    // -----------------------
     // Find all supplier in the supplier Repository
     // -----------------------
     @Select("SELECT * FROM suppliers ORDER BY id DESC")

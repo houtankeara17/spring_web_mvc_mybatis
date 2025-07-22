@@ -43,7 +43,7 @@ public class ProductProvider implements ProviderMethodResolver {
         return new SQL(){{
             UPDATE("product_categories");
             SET("category_id=#{catId}");
-            WHERE("product_id=#{proId}");
+            WHERE("id=#{proId}");
         }}.toString();
     }
 

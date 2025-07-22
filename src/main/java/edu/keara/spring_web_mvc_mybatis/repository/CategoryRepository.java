@@ -8,6 +8,11 @@ import java.util.List;
 
 @Mapper
 public interface CategoryRepository {
+
+    // -----------------------
+    // ✍️ Using with the Inline SQL type
+    // -----------------------
+
     // -----------------------
     // Get all categories in the Category Repository
     // -----------------------
@@ -16,6 +21,7 @@ public interface CategoryRepository {
 
     // -----------------------
     // Get all categories in the Category Repository
+    // Using with dynamic SQL type (Dynamic Provider
     // -----------------------
     @SelectProvider(CategoryProvider.class)
     List<Category> selectProductCategories(@Param("productId") Integer productId);
@@ -40,7 +46,7 @@ public interface CategoryRepository {
     // Find by id in the Category Repository
     // -----------------------
     @Select("SELECT * FROM categories WHERE id = #{id}")
-    Category findById(@Param("id") List<Category> id);
+    Category findById(@Param("id") Integer id);
 
     // -----------------------
     // Update category by id in the Category Repository

@@ -11,6 +11,7 @@ public interface
 ProductRepository {
     // -----------------------
     // Find product by ID
+    // Using with Relationship
     // -----------------------
     @Select("SELECT * FROM products WHERE id = #{id}")
     @Results({
@@ -29,6 +30,7 @@ ProductRepository {
 
     // -----------------------
     // Find product by slug
+    // Using with Relationship
     // -----------------------
     @Select("SELECT * FROM products WHERE slug = #{slug}")
     @Results({
@@ -46,6 +48,7 @@ ProductRepository {
     Product findBySlug(String slug);
 
     // Find all products (with supplier and categories
+    // Using with Relationship
     @Select("SELECT * FROM products ORDER BY id DESC")
     @Results({
             @Result(property = "id", column = "id"),
@@ -73,6 +76,7 @@ ProductRepository {
 
     // -----------------------
     // Insert a new product
+    // Using with dynamic SQL type (Dynamic Provider
     // -----------------------
     @InsertProvider(ProductProvider.class)
     @Options(useGeneratedKeys = true, keyProperty = "id")
@@ -80,18 +84,21 @@ ProductRepository {
 
     // -----------------------
     // Product-Category Many-too-Many handlers
+    // Using with dynamic SQL type (Dynamic Provider
     // -----------------------
     @InsertProvider(ProductProvider.class)
     void insertProductCategories(@Param("proId") Integer proId, @Param("catId") Integer catId);
 
     // -----------------------
     // Update product
+    // Using with dynamic SQL type (Dynamic Provider
     // -----------------------
     @UpdateProvider(value = ProductProvider.class, method = "updateProduct")
     void update(@Param("pro") Product product);
 
     // -----------------------
     // Product-Category Many-too-Many handlers
+    // Using with dynamic SQL type (Dynamic Provider
     // -----------------------
     @UpdateProvider(ProductProvider.class)
     void updateProductCategories(@Param("proId") Integer proId, @Param("catId") Integer catId);
